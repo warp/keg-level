@@ -6,6 +6,8 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
 
+#include "hx711.h"
+
 #define DEBUGPRINT
 
 #ifdef DEBUGPRINT
@@ -14,14 +16,28 @@
 #define DEBUG_PRINT(x)
 #endif
 
+Hx711 scale(A1, A0);
+
 void setup() {
   Serial.begin(115200);
+  Serial.println();
 
-  DEBUG_PRINT("Connecting to wifi...");
   WiFiManager wifi;
-  wifi.autoConnect("Keg");
+
+  if(!wifi.autoConnect("Keg")) {
+    DEBUG_PRINT("Failed to connect...");
+    ESP.reset();
+    delay(1000);
+  }
+
+  DEBUG_PRINT(WiFi.localIP())
+
+  // scale.setOffset(offset);
+  // scale.setScale((w - offset) / 1000);
 }
 
 void loop() {
-  DEBUG_PRINT("Requesting weight...");
+  DEBUG_PRINT(scale.averageValue());
+  // DEBUG_PRINT(scale.getGram())
+  delay(200);
 }
