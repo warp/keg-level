@@ -6,7 +6,9 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
 
-#include "hx711.h"
+#include <TM1637Display.h>
+
+#include <Hx711.h>
 
 #define DEBUGPRINT
 
@@ -15,6 +17,11 @@
 #else
 #define DEBUG_PRINT(x)
 #endif
+
+#define CLK 2
+#define DIO 3
+
+TM1637Display display(CLK, DIO);
 
 Hx711 scale(A1, A0);
 
@@ -38,6 +45,7 @@ void setup() {
 
 void loop() {
   DEBUG_PRINT(scale.averageValue());
-  // DEBUG_PRINT(scale.getGram())
+  DEBUG_PRINT(scale.getGram())
+  display.showNumberDec(scale.getGram())
   delay(200);
 }
